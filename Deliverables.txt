@@ -1,0 +1,59 @@
+Project planning link: 
+
+Choice of game: Battleship
+
+Pseudocode:
+
+1) Define the required variables used to track the state of the game.
+
+2) Store references for cached elements.
+
+3) When the game loads, initialize the game state and render the game using a render function.
+
+4) Define the required constants.
+
+5) Handle a player clicking a square with a ‘handleClick’ function.
+
+6) Handle the other player’s clicking a square with a ‘handleClick' function.
+
+7) Handle the other player's turn automatically after the player’s move.
+
+8) Create a reset function.
+
+9) Check for win conditions after each move.
+
+Suggested initial data structure:
+
+const gameState =
+
+{
+
+      playerBoard: [], // 2D array representing player’s grid
+
+      enemyBoard: [], // 2D array representing enemy’s grid
+
+      ships: [ // Array of ships with positions and status
+
+            { name: “Battleship”, size: 4, positions: [], hits: 0 },
+
+            { name: “Destroyer”, size: 3, positions: [], hits: 0 }
+
+            ],
+
+            currentTurn: “player”, // Track whose turn it is
+
+            gameOver: false, // Flag to indicate if the game has ended
+
+};
+
+ 
+
+GitHub repo link: 
+
+https://git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project.git
+
+ 
+
+Deployed project link: 
+
+https://pages.git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/
