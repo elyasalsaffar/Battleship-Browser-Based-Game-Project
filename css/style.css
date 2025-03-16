@@ -1,0 +1,83 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.ships-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.ship {
+    width: 100px;
+    cursor: grab;
+}
+
+.boards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 50px);
+    grid-template-rows: repeat(5, 50px);
+    gap: 2px;
+    border: 2px solid black;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.cell.ship {
+    background-color: gray;
+}
+
+.cell.hit {
+    background-image: url('./assets/Explosion.png');
+    background-size: cover;
+}
+
+.cell.miss {
+    background-image: url('./assets/Smoke.png');
+    background-size: cover;
+}
+
+.cell.highlight {
+    /* Green highlight for valid placement */
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.cell.invalid {
+    /* Red highlight for invalid placement */
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+.cell.clickable:hover {
+    background-image: url('./assets/Red-target.png');
+    background-size: cover;
+    cursor: pointer;
+}
+
+.cell {
+    position: relative;
+}
+
+.cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
