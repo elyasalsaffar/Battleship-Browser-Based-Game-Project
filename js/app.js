@@ -76,23 +76,34 @@ function render() {
             playerCell.classList.add("cell");
             enemyCell.classList.add("cell");
 
-            // Player board visuals
-            if (gameState.playerBoard[r][c] === "ship") playerCell.classList.add("ship");
+            /* ----- Player Board Rendering ----- */
+            if (gameState.playerBoard[r][c] === "ship") {
+                playerCell.classList.add("ship");
+            } else if (gameState.playerBoard[r][c] === "hit") {
+                const explosionImg = document.createElement("img");
+                explosionImg.src = "./assets/Explosion.png"; // Explosion effect for enemy hits
+                explosionImg.alt = "Explosion";
+                playerCell.appendChild(explosionImg);
+            } else if (gameState.playerBoard[r][c] === "miss") {
+                const smokeImg = document.createElement("img");
+                smokeImg.src = "./assets/Smoke.png"; // Smoke effect for misses
+                smokeImg.alt = "Missed shot";
+                playerCell.appendChild(smokeImg);
+            }
 
-            // Enemy board visuals (Hit/Miss)
+            /* ----- Enemy Board Rendering ----- */
             if (gameState.enemyBoard[r][c] === "hit") {
                 const explosionImg = document.createElement("img");
-                explosionImg.src = "./assets/Explosion.png"; // Set the explosion image
+                explosionImg.src = "./assets/Explosion.png"; // Explosion effect for player's hits
                 explosionImg.alt = "Explosion";
                 enemyCell.appendChild(explosionImg);
             } else if (gameState.enemyBoard[r][c] === "miss") {
                 const smokeImg = document.createElement("img");
-                smokeImg.src = "./assets/Smoke.png"; // Set the smoke image
+                smokeImg.src = "./assets/Smoke.png"; // Smoke effect for player's misses
                 smokeImg.alt = "Missed shot";
                 enemyCell.appendChild(smokeImg);
             } else {
-                // Allow clicking only if the cell has not been clicked yet and it's the player's turn
-                if (gameState.currentTurn === "player") {
+                if (gameState.currentTurn === "player" && !gameState.gameOver) {
                     enemyCell.addEventListener("click", () => handleAttack(r, c, enemyCell));
                     enemyCell.classList.add("clickable"); // Enable hover effect
                 }
@@ -104,6 +115,7 @@ function render() {
     }
 }
 
+
 function handleAttack(row, col, enemyCell) {
     if (!gameState.gameStarted || gameState.gameOver || gameState.currentTurn !== "player") return;
 
@@ -113,34 +125,33 @@ function handleAttack(row, col, enemyCell) {
     if (target === "hit" || target === "miss") return;
 
     if (target === "ship") {
-        gameState.enemyBoard[row][col] = "hit"; // Explosion
-        messageEl.textContent = "You hit! Attack again."; // Keep this message to allow the player to continue attacking
+        gameState.enemyBoard[row][col] = "hit"; // Mark as hit
+        messageEl.textContent = "You hit! Attack again.";
 
-        // Add Explosion image to the specific cell
+        // Explosion effect
         const explosionImg = document.createElement("img");
         explosionImg.src = "./assets/Explosion.png";
         explosionImg.alt = "Explosion";
         enemyCell.appendChild(explosionImg);
 
-        // Do not switch to enemy's turn if the player hits a ship
+        checkWin();
     } else {
-        gameState.enemyBoard[row][col] = "miss"; // Smoke
+        gameState.enemyBoard[row][col] = "miss"; // Mark as miss
         messageEl.textContent = "You missed! Enemy's turn...";
 
-        // Add Smoke image to the specific cell
+        // Smoke effect
         const smokeImg = document.createElement("img");
-        smokeImg.src = "./assets/Smoke.png"; // Same smoke image for both player and enemy
+        smokeImg.src = "./assets/Smoke.png";
         smokeImg.alt = "Missed shot";
         enemyCell.appendChild(smokeImg);
 
-        gameState.currentTurn = "enemy"; // Switch to enemy's turn
-        setTimeout(enemyTurn, 1000); // Delay before the enemy makes its move
+        gameState.currentTurn = "enemy"; // Switch turn on miss
+        setTimeout(enemyTurn, 1000);
     }
 
-    // Check if the game is over after the attack
-    checkWin(); 
-    render(); // Update board after the attack
+    render();
 }
+
 
 function enemyTurn() {
     if (gameState.gameOver) return;
@@ -153,34 +164,36 @@ function enemyTurn() {
         col = Math.floor(Math.random() * BOARD_SIZE);
     } while (gameState.playerBoard[row][col] === "hit" || gameState.playerBoard[row][col] === "miss");
 
-    // If the enemy hits
     if (gameState.playerBoard[row][col] === "ship") {
         gameState.playerBoard[row][col] = "hit"; // Mark as hit
 
-        // Access the specific cell in the player board
+        // Explosion effect for enemy's hit
         const hitCell = playerBoardEl.children[row * BOARD_SIZE + col];
         const explosionImg = document.createElement("img");
-        explosionImg.src = "./assets/Explosion.png"; // Explosion effect for enemy hits
+        explosionImg.src = "./assets/Explosion.png";
         explosionImg.alt = "Explosion";
-        hitCell.appendChild(explosionImg); // Add explosion to the cell
+        hitCell.appendChild(explosionImg);
 
-        messageEl.textContent = "Enemy hit! Your turn.";
-        checkWin(); // Check if the player lost
+        messageEl.textContent = "Enemy hit! Attacking again...";
+        checkWin();
+
+        // Allow the enemy to play again if it hits a ship
+        setTimeout(enemyTurn, 1000);
     } else {
         gameState.playerBoard[row][col] = "miss"; // Mark as miss
 
-        // Access the specific cell in the player board
+        // Smoke effect for enemy's miss
         const missCell = playerBoardEl.children[row * BOARD_SIZE + col];
         const smokeImg = document.createElement("img");
-        smokeImg.src = "./assets/Smoke.png"; // Smoke effect for misses
+        smokeImg.src = "./assets/Smoke.png";
         smokeImg.alt = "Missed shot";
-        missCell.appendChild(smokeImg); // Add smoke to the cell
+        missCell.appendChild(smokeImg);
 
         messageEl.textContent = "Enemy missed! Your turn.";
+        gameState.currentTurn = "player"; // Switch back to player
     }
 
-    gameState.currentTurn = "player"; // Switch back to player's turn
-    render(); // Update the board with the new state
+    render();
 }
 
 
