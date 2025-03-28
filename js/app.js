@@ -169,8 +169,207 @@ function render()
 // Handle attack
 function handleAttack(row, col, enemyCell)
 {
+    if (!gameState.gameStarted || gameState.gameOver || gameState.currentTurn !== "player") return;
 
+    let target = gameState.enemyBoard[row][col];
+
+    // Prevent clicking the same spot twice
+    if (target === "hit" || target === "miss") return;
+
+    if (target === "ship") 
+    {
+        gameState.enemyBoard[row][col] = "hit"; // Mark as hit
+        messageEl.textContent = "You hit! Attack again.";
+
+        // Explosion effect
+        const explosionImg = document.createElement("img");
+        explosionImg.src = "./assets/Explosion.png";
+        explosionImg.alt = "Explosion";
+        enemyCell.appendChild(explosionImg);
+
+        checkWin();
+    } else
+    {
+        gameState.enemyBoard[row][col] = "miss"; // Mark as miss
+        messageEl.textContent = "You missed! Enemy's turn...";
+
+        // Smoke effect
+        const smokeImg = document.createElement("img");
+        smokeImg.src = "./assets/Smoke.png";
+        smokeImg.alt = "Missed shot";
+        enemyCell.appendChild(smokeImg);
+
+        gameState.currentTurn = "enemy"; // Switch turn on miss
+        setTimeout(enemyBoardEl, 1000);
+    }
+    render();
 }
+
+function enemyTurn()
+{
+    if (gameState.gameOver) return;
+
+    messageEl.textContent = "Enemy is attacking...";
+
+    let row, col;
+    do 
+    {
+        row = Math.floor(Math.random() * BOARD_SIZE);
+        col = Math.floor(Math.random() * BOARD_SIZE);
+    } while (gameState.playerBoard[row][col] === "hit" || gameState.playerBoard[row][col] === "miss");
+
+    if (gameState.playerBoard[row][col] === "ship")
+    {
+        gameState.playerBoard[row][col] = "hit"; // Mark as hit
+
+        // Explosion effect for enemy's hit
+        const hitCell = playerBoardEL.children[row * BOARD_SIZE + col];
+        const explosionImg = document.createElement("img");
+        explosionImg.src = "./assets/Explosion.png";
+        explosionImg.alt = "Explosion";
+        hitCell.appendChild(explosionImg);
+
+        messageEl.textContent = "Enemy hit! Attacking again...";
+        checkWin();
+
+        // Allow the enemy to play again if it hits a ship
+        setTimeout(enemyTurn, 1000);
+    } else
+    {
+        gameState.playerBoard[row][col] = "miss"; // Mark as miss
+
+        // Smoke effect for enemy's miss
+        const missCell = playerBoardEL.children[row *BOARD_SIZE + col];
+        const smokeImg = document.createElement("img");
+        smokeImg.src = "./assets/Smoke.png";
+        smokeImg.alt = "Missed shot";
+        missCell.appendChild(smokeImg);
+
+        messageEl.textContent = "Enemy missed! Your turn.";
+        gameState.currentTurn = "player"; // Switch back to player
+    }
+    render();
+}
+
+function checkWin()
+{
+    // Check if all player ships are hit
+    const playerShipsRemaining = gameState.playerBoard.flat().filter(cell => cell === "ship").length;
+    if (playerShipsRemaining === 0)
+    {
+        gameState.gameOver = true;
+        messageEl.textContent = "You lost! The enemy destroyed all your ships.";
+    }
+
+    // Check if all enemy ships are hit
+    const enemyShipsRemaining = gameState.enemyBoard.flat().filter(cell => cell === "ship").length;
+    if (enemyShipsRemaining === 0)
+    {
+    gameState.gameOver = true;
+    messageEl,textContent = "You won! You destroyed all the enemy's ships.";
+    }
+}
+
+/*----------------------------- Drag and Drop Ships -------------------------*/
+
+
+// Start dragging a ship
+ships.forEach(ship => {
+    ship.addEventListener("dragstart", event => {
+        draggedShip = 
+        {
+            size: parseInt(ship.CDATA_SECTION_NODE.size),
+            element: ship
+        };
+    });
+});
+
+// Allow dropping on player board
+playerBoardEL.addEventListener("dragover", event => {
+    event.preventDefault();
+
+    const rect = playerBoardEL.getBoundingClientRect();
+    const col = Math.floor((event.clientX - rect.left) / 50);
+    const row = Math.floor((event.clientY - rect.top) / 50);
+
+    highlightPlacement(row, col, draggedShip.size);
+})
+
+// Remove highlights when leaving the board
+playerBoardEL.addEventListener("dragover", () => clearHighlights());
+
+// Drop the ship on the board
+playerBoardEl.addEventListener("drop", event => {
+    event.preventDefault();
+
+    const rect = playerBoardEL.getBoundingClientRect();
+    const col = Math.floor((event.clientX - rect.left) / 50);
+    const row = Math.floor((event.clientY - rect.top) / 50);
+
+    if (canPlaceShip(row, col, draggedShip.size, gameState.playerBoard))
+    {
+        for (let i = onabort; i < draggedShip.size; i++)
+        {
+            gameState.playerBoard[row][col + i] = "ship";
+        }
+
+        draggedShip.element.remove(); // Remove the ship from selection
+        gameState.playerShipsPlaced++;
+
+        if (gameState.playerShipsPlaced === ships.length) startBtn.disabled = false;
+    }
+    render();
+});
+
+/*----------------------- Ship Placement Helper Functions -------------------*/
+
+// Highlight valid placement
+function highlightPlacement(row, col, size)
+{
+    clearHighlights();
+
+    for (let i = 0; i < size; i++)
+    {
+        if (row < BOARD_SIZE && col + i < BOARD_SIZE)
+        {
+            const cellIndex = row * BOARD_SIZE + col + i;
+            playerBoardEL.children[cellIndex].classList.add("highlight");
+        }
+    }
+}
+
+// clear highlights
+function clearHighlights()
+{
+    document.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("highlight", "invalid");
+    });
+}
+
+// Check if a ship can be placed
+function canPlaceShip(row, col, size, board)
+{
+    if (col + size > BOARD_SIZE) return false; // Ship out of bounds
+
+    for (let i = 0; i < size; i++)
+    {
+        if (board[row][col + i] !== null) return false; // Overlapping another ship
+    }
+    return true;
+}
+
+// Start the game
+startBtn.addEventListener("click", () => {
+    gameState.gameStarted = true;
+    messageEl.textContent = "Game started! Attack the enemy board.";
+    render();
+});
+
+// Reset game
+resetBtn.addEventListener("click", init);
+
+// Start game
+init();
 
 
 /*----------------------------- Event Listeners -----------------------------*/
