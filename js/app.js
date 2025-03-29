@@ -55,7 +55,7 @@ function init() {
     gameState.currentTurn = "player";
     messageEl.textContent = "Drag your ships to the board";
     startBtn.disabled = true;
-
+    startBtn.style.visibility = 'visible'; // Make the start button visible again on reset
     
     placeShipsRandomly(gameState.enemyBoard); // Place enemy ships
     render();
@@ -362,6 +362,7 @@ function canPlaceShip(row, col, size, board)
 startBtn.addEventListener("click", () => {
     gameState.gameStarted = true;
     messageEl.textContent = "Game started! Attack the enemy board.";
+    startBtn.style.visibility = 'hidden'; // Hide the start button after the game starts
     render();
 });
 

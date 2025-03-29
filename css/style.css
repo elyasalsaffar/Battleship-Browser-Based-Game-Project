@@ -81,3 +81,43 @@ body {
     top: 0;
     left: 0;
 }
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#start-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#start-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+#reset-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+#reset-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+}
+
+#start-btn-disabled {
+    background-color: grey;
+    cursor: not-allowed;
+    transform: scale(1);
+}
+
+#start-btn:disabled:hover {
+    background-color: grey;
+}
