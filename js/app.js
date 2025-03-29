@@ -7,36 +7,36 @@ const BOARD_SIZE = 5;
 
 // Store the current state of the game
 const gameState = {
-    playerBoard: [],
-    enemyBoard: [],
+    playerBoard: Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null)),
+    enemyBoard: Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null)),
     playerShipsPlaced: 0,
     gameStarted: false,
-    currentTurn: "player",
+    currentTurn: "player", // Make sure the game starts with the player's turn
     gameOver: false
 };
 
 // Initialize the boards
-function initializeBoards() {
-    for (let i = 0; i < BOARD_SIZE; i++)
-    {
-        const row = [];
-        for (let j = 0; j < BOARD_SIZE; j++)
-        {
-            row.push(null);
-        }
-        gameState.playerBoard.push(row);
-        gameState.enemyBoard.push(row);
-    }
-}
+// function initializeBoards() {
+//     for (let i = 0; i < BOARD_SIZE; i++)
+//     {
+//         const row = [];
+//         for (let j = 0; j < BOARD_SIZE; j++)
+//         {
+//             row.push(null);
+//         }
+//         gameState.playerBoard.push(row);
+//         gameState.enemyBoard.push(row);
+//     }
+// }
 
 // Call the function to set up the boards
-initializeBoards();
+// initializeBoards();
 
 let draggedShip = null;
 
 /*------------------------ Cached Element References ------------------------*/
 
-const playerBoardEL = document.getElementById("player-board");
+const playerBoardEl = document.getElementById("player-board");
 const enemyBoardEl = document.getElementById("enemy-board");
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
@@ -56,15 +56,15 @@ function init() {
     messageEl.textContent = "Drag your ships to the board";
     startBtn.disabled = true;
 
-    // Place enemy ships
-    placeShipsRandomly(gameState.enemyBoard);
+    
+    placeShipsRandomly(gameState.enemyBoard); // Place enemy ships
     render();
 }
 
 // Place ships randomly for the enemy player
 function placeShipsRandomly(board)
 {
-    const shipSizes = [2, 2]; // Two ships each with 2 cells size
+    const shipSizes = [2, 2]; // Two ships each with size 2
 
     shipSizes.forEach(size => {
         let placed = false;
@@ -89,25 +89,25 @@ function placeShipsRandomly(board)
 // Create an empty board
 function createEmptyBoard()
 {
-    // return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
+    return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
 
-    let board = [];
-    for (let i = 0; i < BOARD_SIZE; i++)
-    {
-        let row = [];
-        for (let j = 0; j < BOARD_SIZE; j++)
-        {
-            row.push(null);
-        }
-        board.push(row);
-    }
-    return board;
+//     let board = [];
+//     for (let i = 0; i < BOARD_SIZE; i++)
+//     {
+//         let row = [];
+//         for (let j = 0; j < BOARD_SIZE; j++)
+//         {
+//             row.push(null);
+//         }
+//         board.push(row);
+//     }
+//     return board;
 }
 
 // Render the game board
 function render()
 {
-    playerBoardEL.innerHTML = "";
+    playerBoardEl.innerHTML = "";
     enemyBoardEl.innerHTML = "";
 
     for (let r = 0; r < BOARD_SIZE; r++)
@@ -139,23 +139,23 @@ function render()
             }
 
             // Render enemy board
-            if (gameState.playerBoard[r][c] === "hit")
+            if (gameState.enemyBoard[r][c] === "hit")
                 {
                     const explosionImg = document.createElement("img");
                     explosionImg.src = "./assets/Explosion.png"; // Explosion effect for player's hits
                     explosionImg.alt = "Explosion";
-                    playerCell.appendChild(explosionImg);
+                    enemyCell.appendChild(explosionImg);
                 } else if (gameState.enemyBoard[r][c] === "miss")
                 {
                     const smokeImg = document.createElement("img");
                     smokeImg.src = "./assets/Smoke.png"; // Smoke effect for player's misses
                     smokeImg.alt = "Missed shot";
-                    playerCell.appendChild(smokeImg);
+                    enemyCell.appendChild(smokeImg);
                 } else
                 {
                     if (gameState.currentTurn === "player" && !gameState.gameOver)
                     {
-                        enemyCell.addEventListener("click", () => handleAttack(4, c, enemyCell));
+                        enemyCell.addEventListener("click", () => handleAttack(r, c, enemyCell));
                         enemyCell.classList.add("clickable");
                     }
                 }
@@ -200,7 +200,7 @@ function handleAttack(row, col, enemyCell)
         enemyCell.appendChild(smokeImg);
 
         gameState.currentTurn = "enemy"; // Switch turn on miss
-        setTimeout(enemyBoardEl, 1000);
+        setTimeout(enemyTurn, 1000);
     }
     render();
 }
@@ -223,7 +223,7 @@ function enemyTurn()
         gameState.playerBoard[row][col] = "hit"; // Mark as hit
 
         // Explosion effect for enemy's hit
-        const hitCell = playerBoardEL.children[row * BOARD_SIZE + col];
+        const hitCell = playerBoardEl.children[row * BOARD_SIZE + col];
         const explosionImg = document.createElement("img");
         explosionImg.src = "./assets/Explosion.png";
         explosionImg.alt = "Explosion";
@@ -239,7 +239,7 @@ function enemyTurn()
         gameState.playerBoard[row][col] = "miss"; // Mark as miss
 
         // Smoke effect for enemy's miss
-        const missCell = playerBoardEL.children[row *BOARD_SIZE + col];
+        const missCell = playerBoardEl.children[row *BOARD_SIZE + col];
         const smokeImg = document.createElement("img");
         smokeImg.src = "./assets/Smoke.png";
         smokeImg.alt = "Missed shot";
@@ -266,7 +266,7 @@ function checkWin()
     if (enemyShipsRemaining === 0)
     {
     gameState.gameOver = true;
-    messageEl,textContent = "You won! You destroyed all the enemy's ships.";
+    messageEl.textContent = "You won! You destroyed all the enemy's ships.";
     }
 }
 
@@ -278,17 +278,17 @@ ships.forEach(ship => {
     ship.addEventListener("dragstart", event => {
         draggedShip = 
         {
-            size: parseInt(ship.CDATA_SECTION_NODE.size),
+            size: parseInt(ship.dataset.size),
             element: ship
         };
     });
 });
 
 // Allow dropping on player board
-playerBoardEL.addEventListener("dragover", event => {
+playerBoardEl.addEventListener("dragover", event => {
     event.preventDefault();
 
-    const rect = playerBoardEL.getBoundingClientRect();
+    const rect = playerBoardEl.getBoundingClientRect();
     const col = Math.floor((event.clientX - rect.left) / 50);
     const row = Math.floor((event.clientY - rect.top) / 50);
 
@@ -296,19 +296,19 @@ playerBoardEL.addEventListener("dragover", event => {
 })
 
 // Remove highlights when leaving the board
-playerBoardEL.addEventListener("dragover", () => clearHighlights());
+playerBoardEl.addEventListener("dragover", () => clearHighlights());
 
 // Drop the ship on the board
 playerBoardEl.addEventListener("drop", event => {
     event.preventDefault();
 
-    const rect = playerBoardEL.getBoundingClientRect();
+    const rect = playerBoardEl.getBoundingClientRect();
     const col = Math.floor((event.clientX - rect.left) / 50);
     const row = Math.floor((event.clientY - rect.top) / 50);
 
     if (canPlaceShip(row, col, draggedShip.size, gameState.playerBoard))
     {
-        for (let i = onabort; i < draggedShip.size; i++)
+        for (let i = 0; i < draggedShip.size; i++)
         {
             gameState.playerBoard[row][col + i] = "ship";
         }
@@ -333,7 +333,7 @@ function highlightPlacement(row, col, size)
         if (row < BOARD_SIZE && col + i < BOARD_SIZE)
         {
             const cellIndex = row * BOARD_SIZE + col + i;
-            playerBoardEL.children[cellIndex].classList.add("highlight");
+            playerBoardEl.children[cellIndex].classList.add("highlight");
         }
     }
 }
