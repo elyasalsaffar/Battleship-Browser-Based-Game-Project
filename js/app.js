@@ -7,8 +7,8 @@ const BOARD_SIZE = 5;
 
 // Store the current state of the game
 const gameState = {
-    playerBoard: Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null)),
-    enemyBoard: Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null)),
+    playerBoard: [],
+    enemyBoard: [],
     playerShipsPlaced: 0,
     gameStarted: false,
     currentTurn: "player", // Make sure the game starts with the player's turn
@@ -16,21 +16,21 @@ const gameState = {
 };
 
 // Initialize the boards
-// function initializeBoards() {
-//     for (let i = 0; i < BOARD_SIZE; i++)
-//     {
-//         const row = [];
-//         for (let j = 0; j < BOARD_SIZE; j++)
-//         {
-//             row.push(null);
-//         }
-//         gameState.playerBoard.push(row);
-//         gameState.enemyBoard.push(row);
-//     }
-// }
+function initializeBoards() {
+    for (let i = 0; i < BOARD_SIZE; i++)
+    {
+        const row = [];
+        for (let j = 0; j < BOARD_SIZE; j++)
+        {
+            row.push(null);
+        }
+        gameState.playerBoard.push(row);
+        gameState.enemyBoard.push(row);
+    }
+}
 
 // Call the function to set up the boards
-// initializeBoards();
+initializeBoards();
 
 let draggedShip = null;
 
@@ -107,19 +107,17 @@ function placeShipsRandomly(board)
 // Create an empty board
 function createEmptyBoard()
 {
-    return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
-
-//     let board = [];
-//     for (let i = 0; i < BOARD_SIZE; i++)
-//     {
-//         let row = [];
-//         for (let j = 0; j < BOARD_SIZE; j++)
-//         {
-//             row.push(null);
-//         }
-//         board.push(row);
-//     }
-//     return board;
+    let board = [];
+    for (let i = 0; i < BOARD_SIZE; i++)
+    {
+        let row = [];
+        for (let j = 0; j < BOARD_SIZE; j++)
+        {
+            row.push(null);
+        }
+        board.push(row);
+    }
+    return board;
 }
 
 // Render the game board
@@ -314,7 +312,7 @@ playerBoardEl.addEventListener("dragover", event => {
 })
 
 // Remove highlights when leaving the board
-playerBoardEl.addEventListener("dragover", () => clearHighlights());
+// playerBoardEl.addEventListener("dragover", () => clearHighlights());
 
 // Drop the ship on the board
 playerBoardEl.addEventListener("drop", event => {
