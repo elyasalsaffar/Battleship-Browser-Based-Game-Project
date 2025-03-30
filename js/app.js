@@ -56,7 +56,25 @@ function init() {
     messageEl.textContent = "Drag your ships to the board";
     startBtn.disabled = true;
     startBtn.style.visibility = 'visible'; // Make the start button visible again on reset
+    resetBtn.style.visibility = 'hidden'; // Hide the reset button initially
     
+    // Re-add ships to the ship container
+    const shipsContainer = document.querySelector(".ships-container");
+    shipsContainer.innerHTML = `
+    <img src="./assets/Battleship-a.png" id="battleship" class="ship" draggable="true" data-size="2">
+    <img src="./assets/Battleship-b.png" id="destroyer" class="ship" draggable="true" data-size="2">
+    `;
+
+    // Reattach event listeners to new ship elements
+    document.querySelectorAll(".ship").forEach(ship => {
+        ship.addEventListener("dragstart", event => {
+            draggedShip = {
+                size: parseInt(ship.dataset.size),
+                element: ship
+            };
+        });
+    });
+
     placeShipsRandomly(gameState.enemyBoard); // Place enemy ships
     render();
 }
@@ -363,6 +381,7 @@ startBtn.addEventListener("click", () => {
     gameState.gameStarted = true;
     messageEl.textContent = "Game started! Attack the enemy board.";
     startBtn.style.visibility = 'hidden'; // Hide the start button after the game starts
+    resetBtn.style.visibility = 'visible'; // Show reset button
     render();
 });
 
@@ -371,6 +390,3 @@ resetBtn.addEventListener("click", init);
 
 // Start game
 init();
-
-
-/*----------------------------- Event Listeners -----------------------------*/
