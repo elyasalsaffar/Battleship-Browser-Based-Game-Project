@@ -169,7 +169,7 @@ function render()
                     enemyCell.appendChild(smokeImg);
                 } else
                 {
-                    if (gameState.currentTurn === "player" && !gameState.gameOver)
+                    if (gameState.gameStarted && gameState.currentTurn === "player" && !gameState.gameOver)
                     {
                         enemyCell.addEventListener("click", () => handleAttack(r, c, enemyCell));
                         enemyCell.classList.add("clickable");
