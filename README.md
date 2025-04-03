@@ -6,4 +6,4 @@
 
 Technologies used: **HTML, CSS, and JS.**
 
-**Next steps:** Enhance the enemy player (Computer) to use 
+**Next steps:** Enhance the enemy player (Computer) to use a better algorithm for deciding hits.
