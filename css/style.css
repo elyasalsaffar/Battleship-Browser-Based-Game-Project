@@ -23,8 +23,8 @@ body {
 
 .board {
     display: grid;
-    grid-template-columns: repeat(5, 50px);
-    grid-template-rows: repeat(5, 50px);
+    grid-template-columns: repeat(5, 50px);  /* Creates a 5x5 grid of 50px columns */
+    grid-template-rows: repeat(5, 50px);     /* Creates a 5x5 grid of 50px rows */
     gap: 2px;
     border: 2px solid black;
 }
@@ -32,7 +32,7 @@ body {
 .cell {
     width: 50px;
     height: 50px;
-    background-color: lightblue;
+    background-color: lightblue; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,12 +54,10 @@ body {
 }
 
 .cell.highlight {
-    /* Green highlight for valid placement */
     background-color: rgba(0, 255, 0, 0.5);
 }
 
 .cell.invalid {
-    /* Red highlight for invalid placement */
     background-color: rgba(255, 0, 0, 0.5);
 }
 

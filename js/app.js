@@ -3,6 +3,14 @@
 // Definie 5x5 grid board size
 const BOARD_SIZE = 5;
 
+// Define paths to sound effect files
+const EXPLOSION_SOUND = "./assets/hit-sound.mp3";
+const MISS_SOUND = "./assets/miss-sound.mp3";
+const START_SOUND = "./assets/start-sound.mp3";
+const RESET_SOUND = "./assets/reset-sound.mp3";
+const WIN_SOUND = "./assets/win-sound.mp3";
+const LOSE_SOUND = "./assets/lose-sound.mp3";
+
 /*---------------------------- Variables (state) ----------------------------*/
 
 // Store the current state of the game
@@ -42,6 +50,44 @@ const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
 const messageEl = document.getElementById("message");
 const ships = document.querySelectorAll(".ship");
+
+/*-------------------------------- Sound Functions --------------------------*/
+
+function playSound(audioFile)
+{
+    const audio = new Audio(audioFile)
+    audio.play();
+}
+
+function playExplosionSound()
+{
+    playSound(EXPLOSION_SOUND);
+}
+
+function playMissSound()
+{
+    playSound(MISS_SOUND);
+}
+
+function playStartSound()
+{
+    playSound(START_SOUND);
+}
+
+function playResetSound()
+{
+    playSound(RESET_SOUND);
+}
+
+function playWinSound()
+{
+    playSound(WIN_SOUND);
+}
+
+function playLoseSound()
+{
+    playSound(LOSE_SOUND);
+}
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -196,6 +242,7 @@ function handleAttack(row, col, enemyCell)
     {
         gameState.enemyBoard[row][col] = "hit"; // Mark as hit
         messageEl.textContent = "You hit! Attack again.";
+        playExplosionSound();
 
         // Explosion effect
         const explosionImg = document.createElement("img");
@@ -208,6 +255,7 @@ function handleAttack(row, col, enemyCell)
     {
         gameState.enemyBoard[row][col] = "miss"; // Mark as miss
         messageEl.textContent = "You missed! Enemy's turn...";
+        playMissSound();
 
         // Smoke effect
         const smokeImg = document.createElement("img");
@@ -237,6 +285,7 @@ function enemyTurn()
     if (gameState.playerBoard[row][col] === "ship")
     {
         gameState.playerBoard[row][col] = "hit"; // Mark as hit
+        playExplosionSound();
 
         // Explosion effect for enemy's hit
         const hitCell = playerBoardEl.children[row * BOARD_SIZE + col];
@@ -253,6 +302,7 @@ function enemyTurn()
     } else
     {
         gameState.playerBoard[row][col] = "miss"; // Mark as miss
+        playMissSound();
 
         // Smoke effect for enemy's miss
         const missCell = playerBoardEl.children[row *BOARD_SIZE + col];
@@ -275,6 +325,7 @@ function checkWin()
     {
         gameState.gameOver = true;
         messageEl.textContent = "You lost! The enemy destroyed all your ships.";
+        playLoseSound();
     }
 
     // Check if all enemy ships are hit
@@ -283,6 +334,7 @@ function checkWin()
     {
     gameState.gameOver = true;
     messageEl.textContent = "You won! You destroyed all the enemy's ships.";
+    playWinSound();
     }
 }
 
@@ -380,11 +432,15 @@ startBtn.addEventListener("click", () => {
     messageEl.textContent = "Game started! Attack the enemy board.";
     startBtn.style.visibility = 'hidden'; // Hide the start button after the game starts
     resetBtn.style.visibility = 'visible'; // Show reset button
+    playStartSound();
     render();
 });
 
 // Reset game
-resetBtn.addEventListener("click", init);
+resetBtn.addEventListener("click", () => {
+    playResetSound();
+    init();
+});
 
 // Start game
 init();
