@@ -34,6 +34,8 @@ To play the game:
 - **CSS**
 - **JavaScript**
 
+---
+
 ## 🌱 Next Steps
 
 - Improve the computer AI to target more intelligently after a successful hit.
