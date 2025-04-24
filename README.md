@@ -2,7 +2,7 @@
 
 **Combine elements of chance and tactics to try and sink all the opponents ships!**
 
-![Battleship Screenshot](https://git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/assets/54563/748c782f-57c4-402c-bbe5-f9bc00bb54d4)
+![Battleship Screenshot](https://media.git.generalassemb.ly/user/54563/files/748c782f-57c4-402c-bbe5-f9bc00bb54d4?token=AAANKIYTD27WO2D43H5DM43IBJYNM)
 
 [🎮 Click here to play the game!](https://elyasalsaffar.github.io/Battleship-Browser-Based-Game-Project/)
 
