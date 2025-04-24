@@ -4,7 +4,7 @@
 
 ![Battleship Screenshot](https://git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/assets/54563/748c782f-57c4-402c-bbe5-f9bc00bb54d4)
 
-[🎮 Click here to play the game!](https://pages.git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/)
+[🎮 Click here to play the game!](https://elyasalsaffar.github.io/Battleship-Browser-Based-Game-Project/)
 
 ---
 
@@ -21,7 +21,7 @@ I chose Battleship because it combines logic and randomness, offering a fun chal
 
 To play the game:
 
-1. Visit the [deployed site](https://pages.git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/).
+1. Visit the [deployed site](https://elyasalsaffar.github.io/Battleship-Browser-Based-Game-Project/).
 2. Place your ships on the left grid.
 3. Click the right grid to attack the computer's ships.
 4. First to sink all ships wins!
