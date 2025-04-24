@@ -50,10 +50,10 @@ const gameState =
 
 GitHub repo link: 
 
-https://git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project.git
+https://github.com/elyasalsaffar/Battleship-Browser-Based-Game-Project
 
  
 
 Deployed project link: 
 
-https://pages.git.generalassemb.ly/elyasalsaffar-ga/Battleship-Browser-Based-Game-Project/
+https://elyasalsaffar.github.io/Battleship-Browser-Based-Game-Project/
